@@ -13,7 +13,11 @@
 		348AAF4C29D347C7006EE107 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 348AAF4A29D347C7006EE107 /* Main.storyboard */; };
 		348AAF4E29D347C9006EE107 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 348AAF4D29D347C9006EE107 /* Assets.xcassets */; };
 		348AAF5129D347C9006EE107 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 348AAF4F29D347C9006EE107 /* LaunchScreen.storyboard */; };
-		348AAF5D29D3482C006EE107 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348AAF5C29D3482C006EE107 /* Model.swift */; };
+		348AAF5D29D3482C006EE107 /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348AAF5C29D3482C006EE107 /* PostModel.swift */; };
+		348AAF5F29D348E3006EE107 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348AAF5E29D348E3006EE107 /* DetailViewController.swift */; };
+		348AAF6129D34924006EE107 /* PostListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348AAF6029D34924006EE107 /* PostListViewController.swift */; };
+		348AAF6329D34949006EE107 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348AAF6229D34949006EE107 /* PostViewModel.swift */; };
+		348AAF6529D3499D006EE107 /* PostProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348AAF6429D3499D006EE107 /* PostProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +29,11 @@
 		348AAF4D29D347C9006EE107 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		348AAF5029D347C9006EE107 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		348AAF5229D347C9006EE107 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		348AAF5C29D3482C006EE107 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		348AAF5C29D3482C006EE107 /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
+		348AAF5E29D348E3006EE107 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		348AAF6029D34924006EE107 /* PostListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostListViewController.swift; sourceTree = "<group>"; };
+		348AAF6229D34949006EE107 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
+		348AAF6429D3499D006EE107 /* PostProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +91,8 @@
 		348AAF5929D347F9006EE107 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				348AAF5C29D3482C006EE107 /* Model.swift */,
+				348AAF5C29D3482C006EE107 /* PostModel.swift */,
+				348AAF6429D3499D006EE107 /* PostProvider.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -91,6 +100,8 @@
 		348AAF5A29D34808006EE107 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				348AAF6029D34924006EE107 /* PostListViewController.swift */,
+				348AAF5E29D348E3006EE107 /* DetailViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -98,6 +109,7 @@
 		348AAF5B29D3480F006EE107 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				348AAF6229D34949006EE107 /* PostViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -174,9 +186,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				348AAF4929D347C7006EE107 /* ViewController.swift in Sources */,
+				348AAF6329D34949006EE107 /* PostViewModel.swift in Sources */,
 				348AAF4529D347C7006EE107 /* AppDelegate.swift in Sources */,
+				348AAF5F29D348E3006EE107 /* DetailViewController.swift in Sources */,
 				348AAF4729D347C7006EE107 /* SceneDelegate.swift in Sources */,
-				348AAF5D29D3482C006EE107 /* Model.swift in Sources */,
+				348AAF6129D34924006EE107 /* PostListViewController.swift in Sources */,
+				348AAF6529D3499D006EE107 /* PostProvider.swift in Sources */,
+				348AAF5D29D3482C006EE107 /* PostModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
