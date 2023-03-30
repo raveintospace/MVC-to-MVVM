@@ -13,11 +13,12 @@ enum CustomError: Error {
 }
 
 class PostViewModel {
-    var provider: PostProvider
+    var provider: PostProviderProtocol
     var postList = [PostModel]()
     var postObservable = PassthroughSubject<Void, Error>()      // sends an empty signal to its subscribers
+    var wasRemovedObservable = PassthroughSubject<(Bool, IndexPath), Never>()
     
-    init(provider: PostProvider = PostProvider()) {
+    init(provider: PostProviderProtocol = PostProvider()) {
         self.provider = provider
     }
     
@@ -33,5 +34,20 @@ class PostViewModel {
             postList = result
             postObservable.send()
         }
+    }
+    
+    func deletePost(postId: Int, indexPath: IndexPath) {
+        provider.deletePostClosure(postId: postId) {[weak self] wasRemoved in
+            guard let self = self else { return }
+            self.postList.remove(at: indexPath.row)
+            DispatchQueue.main.async {
+                self.wasRemovedObservable.send((wasRemoved, indexPath)) // notify that was removed and in which indexPath
+            }
+        }
+    }
+    
+    func formatTitle(_ item : PostModel) -> String{
+        let title = item.title.capitalized
+        return title
     }
 }

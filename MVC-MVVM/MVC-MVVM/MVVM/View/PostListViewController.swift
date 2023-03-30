@@ -8,18 +8,28 @@
 import UIKit
 import Combine
 
-class PostListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    @IBOutlet weak var tableView: UITableView!
+class PostListViewController: UIViewController {
+    lazy var tableView: UITableView = {
+        let tv = UITableView()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        return tv
+    }()
+    
+    lazy var loading: UIActivityIndicatorView = {
+        let loading = UIActivityIndicatorView(style: .large)
+        loading.startAnimating()
+        loading.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 44.0)
+        return loading
+    }()
     
     var viewModel = PostViewModel()
     private var anyCancellable = Set<AnyCancellable>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
-        navigationController?.navigationBar.prefersLargeTitles = true
         subscriptions()
+        configureTableView()
         Task{
             await self.viewModel.getPosts()
         }
@@ -31,30 +41,32 @@ class PostListViewController: UIViewController, UITableViewDelegate, UITableView
         } receiveValue: {
             self.tableView.reloadData()
         }.store(in: &anyCancellable)
-    }
-    
-    private func deletePostClosure(postId : Int, completion : @escaping (Bool)->Void){
-        let url = URL(string: "https://jsonplaceholder.typicode.com/posts/\(postId)")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "DELETE"
-        let service = URLSession.shared.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                completion((error == nil))
+        
+        viewModel.wasRemovedObservable.sink { (wasRemoved, indexpath) in
+            if wasRemoved {
+                self.tableView.deleteRows(at: [indexpath], with: .fade)
             }
-        }
-        service.resume()
+        }.store(in: &anyCancellable)
     }
     
-    private func deleteRowFromList(_ indexPath : IndexPath){
-        viewModel.postList.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .fade)
+    private func configureTableView() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        view.addSubview(tableView)
+        NSLayoutConstraint.activate([
+            tableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            tableView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            tableView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            tableView.heightAnchor.constraint(equalTo: view.heightAnchor),
+        ])
     }
-    
-    func formatTitle(_ item : PostModel) -> String{
-        let title = item.title.capitalized
-        return title
-    }
-    
+}
+
+// MARK: - Extensions
+
+extension PostListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.postList.count
     }
@@ -62,7 +74,7 @@ class PostListViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = viewModel.postList[indexPath.row]
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
-        cell.textLabel?.text = formatTitle(item)
+        cell.textLabel?.text = viewModel.formatTitle(item)
         cell.textLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         cell.textLabel?.numberOfLines = 0
         
@@ -73,14 +85,8 @@ class PostListViewController: UIViewController, UITableViewDelegate, UITableView
             Task{
                 await viewModel.getPosts()  // load more content
             }
-            
-            let loading = UIActivityIndicatorView(style: .large)
-            loading.startAnimating()
-            loading.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 44.0)
-            
             self.tableView.tableFooterView = loading
             self.tableView.tableFooterView?.isHidden = false
-            
         }
         return cell
     }
@@ -93,12 +99,6 @@ class PostListViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let postId = viewModel.postList[indexPath.row].id
-        deletePostClosure(postId: postId) { [weak self] wasRemoved in
-            if wasRemoved{
-                self?.deleteRowFromList(indexPath)
-            }else{
-                print("error removing")
-            }
-        }
+        viewModel.deletePost(postId: postId, indexPath: indexPath)
     }
 }
