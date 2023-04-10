@@ -46,7 +46,7 @@ class PostViewModel {
         }
     }
     
-    func formatTitle(_ item : PostModel) -> String{
+    func formatTitle(_ item: PostModel) -> String{
         let title = item.title.capitalized
         return title
     }

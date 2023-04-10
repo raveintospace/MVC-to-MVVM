@@ -31,7 +31,7 @@ class PostProvider: PostProviderProtocol {
         }
     }
     
-    func deletePostClosure(postId : Int, completion : @escaping (Bool)->Void){
+    func deletePostClosure(postId: Int, completion: @escaping (Bool)->Void){
         let url = URL(string: "https://jsonplaceholder.typicode.com/posts/\(postId)")!
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
